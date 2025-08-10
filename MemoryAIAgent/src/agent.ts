@@ -1,4 +1,3 @@
-// src/agent.ts
 import OpenAI from "openai";
 import { MemoryManager } from "./memoryManager";
 
@@ -6,42 +5,42 @@ const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const memory = new MemoryManager();
 
 export async function runAgent(userInput: string) {
-  // خواندن حافظه فعلی
+  // Reading current memory
   const currentMemory = memory.getMemory();
 
-  // اضافه کردن ورودی کاربر به تاریخچه
+  // Add user input to history
   memory.addHistory(`User: ${userInput}`);
 
-  // ساخت prompt با توجه به حافظه
+  // Creating a prompt according to memory
   const prompt = `
-تو یک دستیار هوشمند هستی.
-تا الان این‌ها رو میدونی:
+You are a smart assistant.
+By now you know these:
 ${JSON.stringify(currentMemory.facts, null, 2)}
 
-تاریخچه مکالمه:
+Conversation history:
 ${currentMemory.history.join("\n")}
 
-کاربر گفت:
+User said:
 "${userInput}"
 
-پاسخ مناسب رو بده:
+Give the correct answer: 
 `;
 
-  // درخواست به مدل
+  // Request to model
   const completion = await client.chat.completions.create({
     model: "gpt-4o-mini",
     messages: [
-      { role: "system", content: "شما یک دستیار هوشمند با حافظه بلندمدت هستید." },
+      { role: "system", content: "You are a smart assistant with a long-term memory." },
       { role: "user", content: prompt },
     ],
   });
 
   const response = completion.choices[0].message?.content || "";
 
-  // ذخیره پاسخ در تاریخچه
+  // Save answer in history
   memory.addHistory(`Agent: ${response}`);
 
-  // مثال ذخیره یک واقعیت جدید (در صورت نیاز)
+  // Example of saving a new fact (if needed)
   memory.addFact("lastUserMessage", userInput);
   memory.addFact("lastAgentResponse", response);
 
