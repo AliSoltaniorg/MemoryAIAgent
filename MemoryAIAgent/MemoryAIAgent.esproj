@@ -3,4 +3,7 @@
     <None Remove="dist\**" />
     <TypeScriptConfiguration Remove="dist\**" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="storage\" />
+  </ItemGroup>
 </Project>

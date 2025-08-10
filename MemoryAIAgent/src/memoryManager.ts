@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-const memoryPath = path.join(__dirname, "../data/Memory.json");
+const memoryPath = path.join(__dirname, "../storage/memory.json");
 
 export interface MemoryData {
   history: string[];
@@ -19,6 +19,8 @@ export class MemoryManager {
     if (fs.existsSync(memoryPath)) {
       const data = fs.readFileSync(memoryPath, "utf-8");
       return JSON.parse(data);
+    } else {
+      fs.writeFileSync(memoryPath, JSON.stringify({ history: [], facts: {} },null,2))
     }
     return { history: [], facts: {} };
   }
