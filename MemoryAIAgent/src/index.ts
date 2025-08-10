@@ -38,7 +38,7 @@ function startChat(): void {
 
     console.log("Answer: ", answer);
 
-    // بروز رسانی حافظه بلندمدت
+    // Updating long-term memory
     const memorySummaryPrompt = `
     Extract any important facts or information from the assistant's last response that should be remembered long-term. If nothing important, answer "None".
 
